@@ -189,6 +189,27 @@ public class MatrixUtils {
 		return total;
 	}
 
+  /**
+   * Return the trace of a square matrix.
+   *
+   * @param input
+   */
+  public static double trace(double[][] input) throws Exception {
+    int rows = input.length;
+    int cols = input[0].length;
+
+    if (rows != cols) {
+      throw new Exception("Trace is only defined for square matrices.");
+    }
+
+    double tr = 0;
+    for (int i = 0; i < rows; i++) {
+      tr += input[i][i];
+    }
+
+    return tr;
+  }
+
 	/**
 	 * Return an array of the sums for each column in the 2D input
 	 * 
@@ -222,6 +243,70 @@ public class MatrixUtils {
 		}
 		return theSums;
 	}
+	
+  /**
+   * Sum across the rows of input matrix.
+   *
+   * @param input
+   * @return array with row sums, length equal to number of rows of input
+   */
+  public static double[] sumRows(double[][] input) {
+    double[] theSums = new double[input.length];
+    for (int r = 0; r < input.length; r++) {
+      for (int c = 0; c < input[r].length; c++) {
+        theSums[r] += input[r][c];
+      }
+    }
+    return theSums;
+  }
+	
+  /**
+   * Sum across the rows of input matrix.
+   *
+   * @param input
+   * @return array with row sums, length equal to number of rows of input
+   */
+  public static int[] sumRows(int[][] input) {
+    int[] theSums = new int[input.length];
+    for (int r = 0; r < input.length; r++) {
+      for (int c = 0; c < input[r].length; c++) {
+        theSums[r] += input[r][c];
+      }
+    }
+    return theSums;
+  }
+	
+  /**
+   * Sum across the columns of input matrix.
+   *
+   * @param input
+   * @return array with columns sums, length equal to number of columns of input
+   */
+  public static double[] sumColumns(double[][] input) {
+    double[] theSums = new double[input[0].length];
+    for (int r = 0; r < input.length; r++) {
+      for (int c = 0; c < input[r].length; c++) {
+        theSums[c] += input[r][c];
+      }
+    }
+    return theSums;
+  }
+
+  /**
+   * Sum across the columns of input matrix.
+   *
+   * @param input
+   * @return array with columns sums, length equal to number of columns of input
+   */
+  public static int[] sumColumns(int[][] input) {
+    int[] theSums = new int[input[0].length];
+    for (int r = 0; r < input.length; r++) {
+      for (int c = 0; c < input[r].length; c++) {
+        theSums[c] += input[r][c];
+      }
+    }
+    return theSums;
+  }
 	
 	public static int countIf(int[] input, int condition) {
 		int total = 0;
@@ -864,6 +949,36 @@ public class MatrixUtils {
 		return returnValues;
 	}
 
+  /**
+   * Return the vector-scalar product x A
+   *
+   * @param x a scalar
+   * @param A an n-dimensional vector
+   * @return an n-dimensional vector
+   */
+  public static int[] vectorScalarProduct(int[] A, int x) {
+    int[] result = new int[A.length];
+		for (int r = 0; r < result.length; r++) {
+        result[r] = A[r] * x;
+    }
+    return result;
+  }
+
+  /**
+   * Return the vector-scalar product x A
+   *
+   * @param x a scalar
+   * @param A an n-dimensional vector
+   * @return an n-dimensional vector
+   */
+  public static double[] vectorScalarProduct(double[] A, double x) {
+    double[] result = new double[A.length];
+		for (int r = 0; r < result.length; r++) {
+        result[r] = A[r] * x;
+    }
+    return result;
+  }
+
 	/**
 	 * Return the matrix product A x B
 	 * 
@@ -935,6 +1050,51 @@ public class MatrixUtils {
 		}
 		return result;
 	}
+
+  /**
+   * Return the matrix-scalar product x A
+   *
+   * @param x a scalar
+   * @param A an nxm matrix
+   * @return an nxm matrix
+   */
+  public static double[][] matrixScalarProduct(double[][] A, double x) {
+    double[][] result = new double[A.length][A[0].length];
+		for (int r = 0; r < result.length; r++) {
+			for (int c = 0; c < result[r].length; c++) {
+        result[r][c] = A[r][c] * x;
+      }
+    }
+    return result;
+  }
+
+  /**
+   * Return the matrix-scalar product x A
+   *
+   * @param x a scalar
+   * @param A an nxm matrix
+   * @return an nxm matrix
+   */
+  public static double[][] matrixScalarProduct(double x, double[][] A) {
+    return matrixScalarProduct(A, x);
+  }
+
+  /**
+   * Return the matrix-scalar product x A
+   *
+   * @param x a scalar
+   * @param A an nxm matrix
+   * @return an nxm matrix
+   */
+  public static double[][] matrixScalarProduct(int[][] A, double x) {
+    double[][] result = new double[A.length][A[0].length];
+		for (int r = 0; r < result.length; r++) {
+			for (int c = 0; c < result[r].length; c++) {
+        result[r][c] = A[r][c] * x;
+      }
+    }
+    return result;
+  }
 
 	/**
 	 * Return the dot product of two vectors v u
@@ -1222,6 +1382,55 @@ public class MatrixUtils {
 		System.arraycopy(v, 0, result, 0, v.length);
 		System.arraycopy(u, 0, result, v.length, u.length);
 		return result;
+	}
+
+  /**
+   *
+   * @param separateValues
+   * @return Single dimensional matrix where each row has been combined into a
+   * single output value, unique to the input row. Unlike {@link
+   * #computeCombineValues(int[], int)}, it takes the most significant value to
+   * be the last value of the array.
+   */
+	public static int computeCombinedValuesLittleEndian(int separateValues[], int base)
+      throws Exception{
+    return computeCombinedValuesLittleEndian(new int[][] {separateValues}, base)[0];
+  }
+
+  /**
+   *
+   * @param separateValues
+   * @return Single dimensional matrix where each row has been combined into a
+   * single output value, unique to the input row. Unlike {@link
+   * #computeCombineValues(int[][], int)}, it takes the most significant value to
+   * be the last column of the array.
+   */
+	public static int[] computeCombinedValuesLittleEndian(int separateValues[][], int base)
+      throws Exception {
+
+    int columns = separateValues[0].length;
+
+		// Make sure we won't get any overflow here
+		if (combinedValuesOverflow(columns, base)) {
+			// multiplier has overflown
+			throw new Exception("Too many columns " + columns + " for the given base " + base +
+					" for this call to computeCombinedValues");
+		}
+
+		int rows = separateValues.length;
+		int[] combinedValues = new int[rows];
+		for (int r = 0; r < rows; r++) {
+			// For each row in vec1
+			int combinedRowValue = 0;
+			int multiplier = 1;
+			for (int c = 0; c < columns; c++) {
+				// Add in the contribution from each column
+				combinedRowValue += separateValues[r][c] * multiplier;
+				multiplier *= base;
+			}
+			combinedValues[r] = combinedRowValue;
+		}
+		return combinedValues;
 	}
 
 	/**
@@ -2009,6 +2218,39 @@ public class MatrixUtils {
 		int columns = inputValues[0].length;
 		boolean reorderingFirstColumn = (reordering.length == columns);
 		double[][] data = new double[rows][columns];
+		for (int r = 0; r < rows; r++) {
+			int reorderIndex = 0;
+			if (reorderingFirstColumn) {
+				data[r][0] = inputValues[reordering[reorderIndex++][r]][0];
+			} else {
+				data[r][0] = inputValues[r][0];
+			}
+			for (int c = 1; c < columns; c++) {
+				data[r][c] = inputValues[reordering[reorderIndex++][r]][c];
+			}
+		}
+		return data;
+	}
+	
+	/**
+	 * Return data[x][y]:
+	 *  - y==0: inputValues[x][0]
+	 *  - y>0:  inputValues[reordering[y-1][x]][y]
+	 * 
+	 * @param inputValues holds the raw data values
+	 * @param reordering outlines how to rearrange the raw data values for each variable or column.
+	 *  First index is variable
+	 *  or column number. Reorderings may be supplied for all of the columns of the inputValues,
+	 *  or for one less than all of the columns, in which case the first column is not
+	 *  reordered. Second index is for the row number or time step. The value at that
+	 *  point states which row number to pull the data from.
+	 * @return
+	 */
+	public static int[][] reorderDataForVariables(int[][] inputValues, int[][] reordering) {
+		int rows = inputValues.length;
+		int columns = inputValues[0].length;
+		boolean reorderingFirstColumn = (reordering.length == columns);
+		int[][] data = new int[rows][columns];
 		for (int r = 0; r < rows; r++) {
 			int reorderIndex = 0;
 			if (reorderingFirstColumn) {
@@ -4343,6 +4585,54 @@ public class MatrixUtils {
 		}
 	}
 	
+	/**
+	 * Initialises all values in the matrix to the given value
+	 * 
+	 * @param matrix
+	 * @param value
+	 */
+	public static void fill(double[] matrix, double value) {
+		int n = matrix.length;
+		for (int r = 0; r < n; r++) {
+      matrix[r] = value;
+		}
+	}
+
+	/**
+	 * Initialises all values in the matrix to the given value
+	 * 
+	 * @param matrix
+	 * @param value
+	 */
+	public static void fill(double[][] matrix, double value) {
+		int rows = matrix.length;
+		for (int r = 0; r < rows; r++) {
+			int cols = matrix[r].length;
+			for (int c = 0; c < cols; c++) {
+				matrix[r][c] = value;
+			}
+		}
+	}
+
+	/**
+	 * Initialises all values in the matrix to the given value
+	 * 
+	 * @param matrix
+	 * @param value
+	 */
+	public static void fill(double[][][] matrix, double value) {
+		int rows = matrix.length;
+		for (int r = 0; r < rows; r++) {
+			int cols = matrix[r].length;
+			for (int c = 0; c < cols; c++) {
+				int height = matrix[r][c].length;
+				for (int h = 0; h < height; h++) {
+					matrix[r][c][h] = value;
+				}
+			}
+		}
+	}
+
 	public static double[][] transpose(double[][] matrix) {
 		double[][] newMatrix = new double[matrix[0].length][matrix.length];
 		for (int i = 0; i < matrix.length; i++) {
@@ -5071,4 +5361,153 @@ public class MatrixUtils {
 		}
 		return diag;
 	}
+
+  /**
+   * Return an array with all integers from 0 to N except for
+   * those present in idx[].
+   */
+  public static int[] allExcept(int[] idx, int N) {
+    boolean[] v = new boolean[N];
+    Arrays.fill(v, true);
+    for (int i = 0; i < idx.length; i++) {
+      v[idx[i]] = false;
+    }
+
+    int[] v2 = new int[N - idx.length];
+    int counter = 0;
+    for (int i = 0; i < N; i++) {
+      if (v[i]) {
+        v2[counter] = i;
+        counter++;
+      }
+    }
+
+    return v2;
+  }
+
+  /**
+   * Calculate the b-ary representation of integer s, and put
+   * it in a vector with N components in little endian format.
+   */
+  public static int[] de2bi(int s, int N, int b) throws Exception {
+    if (s >= Math.pow(b, N)) {
+      throw new Exception("The b-ary representation of s is longer than the provided N. Increase N.");
+    }
+    int[] res = new int[N];
+    int ss = s;
+    for (int i = 0; i < N; i++) {
+      res[i] = ss%b;
+      ss /= b;
+    }
+    return res;
+  }
+
+  /**
+   * Returns the matrix m with each column normalised to 1.
+   */
+  public static double[][] normaliseColumns(double[][] m) {
+    double[] sums = MatrixUtils.sumColumns(m);
+    double[][] res = new double[m.length][m[0].length];
+    for (int i = 0; i < m.length; i++) {
+      for (int j = 0; j < m[i].length; j++) {
+        res[i][j] = m[i][j]/sums[j];
+      }
+    }
+    return res;
+  }
+
+  /**
+   * 
+   * @param pdf double array with probabilities, must sum to 1
+   * @param p indices of the variables to keep
+   * @param base base of the distribution (typically 2)
+   * @param dimensions 
+   */
+  public static double[][] marginaliseJointPDF(double[][] pdf, int[] p, int base, int dimensions)
+      throws Exception {
+
+    int nb_states_i = pdf.length;
+    int nb_states_j = pdf[0].length;
+    int nb_part_states = (int) Math.pow(base, p.length);
+    double[][] partJoint = new double[nb_part_states][nb_part_states];
+
+    for (int i = 0; i < nb_states_i; i++) {
+      int[] past_ints = de2bi(i, dimensions, base);
+      for (int j = 0; j < nb_states_j; j++) {
+        int[] pres_ints = de2bi(j, dimensions, base);
+        int part_past_state = computeCombinedValuesLittleEndian(MatrixUtils.select(past_ints, p), base);
+        int part_pres_state = computeCombinedValuesLittleEndian(MatrixUtils.select(pres_ints, p), base);
+        partJoint[part_past_state][part_pres_state] += pdf[i][j];
+      }
+    }
+
+    return partJoint;
+
+  }
+
+  /**
+   * 
+   * @param pdf double array with probabilities, must sum to 1
+   * @param p1 indices of the variables to keep in the first index
+   * @param p2 indices of the variables to keep in the second index
+   * @param base base of the distribution (typically 2)
+   * @param dimensions 
+   */
+  public static double[][] marginaliseJointPDF(double[][] pdf, int[] p1, int[] p2, int base, int dimensions)
+      throws Exception {
+
+    int nb_states_i = pdf.length;
+    int nb_states_j = pdf[0].length;
+    int nb_part1_states = (int) Math.pow(base, p1.length);
+    int nb_part2_states = (int) Math.pow(base, p2.length);
+    double[][] partJoint = new double[nb_part1_states][nb_part2_states];
+
+    for (int i = 0; i < nb_states_i; i++) {
+      int[] past_ints = de2bi(i, dimensions, base);
+      for (int j = 0; j < nb_states_j; j++) {
+        int[] pres_ints = de2bi(j, dimensions, base);
+        int part_past_state = computeCombinedValuesLittleEndian(MatrixUtils.select(past_ints, p1), base);
+        int part_pres_state = computeCombinedValuesLittleEndian(MatrixUtils.select(pres_ints, p2), base);
+        partJoint[part_past_state][part_pres_state] += pdf[i][j];
+      }
+    }
+
+    return partJoint;
+
+  }
+
+  /**
+   * 
+   * @param pdf double array with probabilities, must sum to 1
+   * @param p indices of the variables to keep
+   * @param base base of the distribution (typically 2)
+   * @param dimensions 
+   */
+  public static double[] marginalisePDF(double[] pdf, int[] p, int base, int dimensions)
+      throws Exception {
+    int nb_states = pdf.length;
+    int nb_part_states = (int) Math.pow(base, p.length);
+    double[] partPDF = new double[nb_part_states];
+    for (int i = 0; i < nb_states; i++) {
+      int[] sys_state = de2bi(i, dimensions, base);
+      int part_state = computeCombinedValuesLittleEndian(select(sys_state, p), base);
+      partPDF[part_state] += pdf[i];
+    }
+
+    return partPDF;
+  }
+
+  /**
+   * Transform a (variable-sized) List of Integers to int[]
+   *
+   * @param list
+   * @return int[] array
+   */
+  public static int[] toIntArray(List<Integer> list){
+    int[] ret = new int[list.size()];
+    for(int i = 0;i < ret.length;i++)
+      ret[i] = list.get(i);
+    return ret;
+  }
+
 }

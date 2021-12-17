@@ -19,6 +19,7 @@
 package infodynamics.utils;
 
 import java.util.List;
+import java.util.Arrays;
 
 import junit.framework.TestCase;
 
@@ -415,6 +416,20 @@ public class MatrixUtilsTest extends TestCase {
 	 * 
 	 * @param expected
 	 * @param actual
+   * @param resolution
+	 */
+	public static void checkArray(double[] expected, double[] actual, double resolution) {
+		for (int r = 0; r < expected.length; r++) {
+			assertEquals(expected[r], actual[r], resolution);
+		}		
+	}
+	
+	/**
+	 * Check that all entries in the given array match those of the expected
+	 *  array
+	 * 
+	 * @param expected
+	 * @param actual
 	 */
 	public static void checkArray(int[] expected, int[] actual) {
 		for (int r = 0; r < expected.length; r++) {
@@ -567,4 +582,46 @@ public class MatrixUtilsTest extends TestCase {
 			checkMatrix(covarianceMatrix, covAfterManualCut, 1e-6);
 		}
 	}
+
+  public void testAllExcept() {
+    assertTrue(Arrays.equals(new int[] {0,2,3,4}, MatrixUtils.allExcept(new int[] {1}, 5)));
+    assertTrue(Arrays.equals(new int[] {2,3}, MatrixUtils.allExcept(new int[] {0,1}, 4)));
+    assertTrue(Arrays.equals(new int[] {1,2,3,4}, MatrixUtils.allExcept(new int[] {0}, 5)));
+    assertTrue(Arrays.equals(new int[] {0,1,2,3}, MatrixUtils.allExcept(new int[] {4}, 5)));
+  }
+
+  public void testDe2Bi() throws Exception {
+    assertTrue(Arrays.equals(new int[] {0,0,0}, MatrixUtils.de2bi(0, 3, 2)));
+    assertTrue(Arrays.equals(new int[] {0,0,0}, MatrixUtils.de2bi(0, 3, 5)));
+    assertTrue(Arrays.equals(new int[] {1,0,0}, MatrixUtils.de2bi(1, 3, 2)));
+    assertTrue(Arrays.equals(new int[] {1,1,0,0,0}, MatrixUtils.de2bi(3, 5, 2)));
+    assertTrue(Arrays.equals(new int[] {2,1}, MatrixUtils.de2bi(7, 2, 5)));
+  }
+
+  public void testNormaliseColumns() {
+    double[][] m1 = new double[][] {{2,3,4,5}};
+    assertTrue(Arrays.deepEquals(new double[][] {{1,1,1,1}}, MatrixUtils.normaliseColumns(m1)));
+    double[][] m2 = new double[][] {{0,0,0}, {2,4,6}};
+    assertTrue(Arrays.deepEquals(new double[][] {{0,0,0},{1,1,1}}, MatrixUtils.normaliseColumns(m2)));
+    double[][] m3 = new double[][] {{1,2,3}, {1,2,3}};
+    assertTrue(Arrays.deepEquals(new double[][] {{0.5,0.5,0.5},{0.5,0.5,0.5}}, MatrixUtils.normaliseColumns(m3)));
+  }
+
+  public void testMarginaliseJointPDF() throws Exception {
+    double[][] pdf = new double[][] {{0.05, 0.10, 0.15, 0.20}, {0.05, 0.10, 0.15, 0.20}};
+    checkMatrix(new double[][] {{0.2, 0.3}, {0.2, 0.3}}, MatrixUtils.marginaliseJointPDF(pdf, new int[]{0}, new int[]{0}, 2, 2), 0.0001);
+    checkMatrix(new double[][] {{0.15, 0.35}, {0.15, 0.35}}, MatrixUtils.marginaliseJointPDF(pdf, new int[]{0}, new int[]{1}, 2, 2), 0.0001);
+  }
+
+  public void testMarginalisePDF() throws Exception {
+    double[] pdf = new double[] {0.1, 0.2, 0.3, 0.4};
+    assertTrue(Arrays.equals(new double[] {0.1, 0.2, 0.3, 0.4}, MatrixUtils.marginalisePDF(pdf, new int[] {0,1}, 2, 2)));
+    checkArray(new double[] {0.4, 0.6}, MatrixUtils.marginalisePDF(pdf, new int[] {0}, 2, 2), 0.001);
+    checkArray(new double[] {0.3, 0.7}, MatrixUtils.marginalisePDF(pdf, new int[] {1}, 2, 2), 0.001);
+
+    pdf = new double[] {0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.64};
+    checkArray(new double[] {0.12, 0.15, 0.73}, MatrixUtils.marginalisePDF(pdf, new int[] {0}, 3, 2), 0.0001);
+    checkArray(new double[] {0.06, 0.15, 0.79}, MatrixUtils.marginalisePDF(pdf, new int[] {1}, 3, 2), 0.0001);
+  }
+
 }
