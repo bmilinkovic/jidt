@@ -291,6 +291,40 @@ public class MutualInformationCalculatorDiscrete extends InfoMeasureCalculatorDi
 		return mi;
 	}
 
+  /**
+   * Compute mutual information directly from a joint p(X,Y) distribution,
+   * without the need of observations. <b>Important</b>: assumes distribution
+   * is normalized.
+   *
+   * @author Pedro A.M. Mediano (<a href="pmediano at pm.me">email</a>,
+   * <a href="http://www.doc.ic.ac.uk/~pam213">www</a>)
+   */
+  public double computeFromJointPDF(double[][] jointProb) {
+    double mi = 0.0;
+    double miCont = 0.0;
+
+    double[] probi = MatrixUtils.sumRows(jointProb);
+    double[] probj = MatrixUtils.sumColumns(jointProb);
+
+    for (int i = 0; i < base1; i++) {
+      for (int j = 0; j < base2; j++) {
+        // Compute MI contribution:
+        if (jointProb[i][j] * probi[i] * probj[j] > 0.0) {
+          double localValue = Math.log(jointProb[i][j] / (probi[i] * probj[j])) / log_2;
+          miCont = jointProb[i][j] * localValue;
+        } else {
+          miCont = 0.0;
+        }
+        mi += miCont;
+      }
+    }
+    
+    average = mi;
+    miComputed = true;
+
+    return mi;
+  }
+
 	@Override
 	public EmpiricalMeasurementDistribution computeSignificance(int numPermutationsToCheck) {
 		RandomGenerator rg = new RandomGenerator();

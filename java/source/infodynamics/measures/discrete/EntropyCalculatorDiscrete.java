@@ -257,6 +257,27 @@ public class EntropyCalculatorDiscrete extends InfoMeasureCalculatorDiscrete
 		average = ent;
 		return ent;
 	}
+
+  /**
+   * Compute entropy directly from a probability distribution, without the
+   * need of observations. <b>Important</b>: assumes distribution is normalized.
+   *
+   * @author Pedro A.M. Mediano (<a href="pmediano at pm.me">email</a>,
+   * <a href="http://www.doc.ic.ac.uk/~pam213">www</a>)
+   */
+  public double computeFromPDF(double[] pdf) {
+    double ent = 0.0;
+
+		for (int i = 0; i < base; i++) {
+      double p = pdf[i];
+      if (p > 0.0) {
+        ent += p*Math.log(p);
+      }
+    }
+    ent = -1.0*ent/Math.log(2);
+
+    return ent;
+  }
 	
 	@Override
 	public double[] computeLocalFromPreviousObservations(int states[]){

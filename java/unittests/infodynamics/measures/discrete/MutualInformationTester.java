@@ -138,4 +138,16 @@ public class MutualInformationTester extends TestCase {
 		assertEquals(1.0, miX123Y, 0.000001);
 	}
 
+  public void testComputeFromPDF() throws Exception {
+    double[][] pdf1 = new double[][] {{0.25, 0.25}, {0.25, 0.25}};
+
+		MutualInformationCalculatorDiscrete miCalc = new MutualInformationCalculatorDiscrete(2);
+    double mi = miCalc.computeFromJointPDF(pdf1);
+    assertEquals(0.0, mi, 0.000001);
+
+    double[][] pdf2 = new double[][] {{0.5, 0}, {0, 0.5}};
+    mi = miCalc.computeFromJointPDF(pdf2);
+    assertEquals(1.0, mi, 0.000001);
+  }
+
 }
