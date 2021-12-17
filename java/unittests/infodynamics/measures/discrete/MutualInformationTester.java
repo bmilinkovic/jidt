@@ -18,6 +18,8 @@
 
 package infodynamics.measures.discrete;
 
+import infodynamics.utils.MatrixUtils;
+
 import junit.framework.TestCase;
 
 public class MutualInformationTester extends TestCase {
@@ -137,6 +139,38 @@ public class MutualInformationTester extends TestCase {
 		double miX123Y = miCalcBase8.computeAverageLocalOfObservations();
 		assertEquals(1.0, miX123Y, 0.000001);
 	}
+
+  public void testSpecificInfo() throws Exception {
+		MutualInformationCalculatorDiscrete miCalc = new MutualInformationCalculatorDiscrete(3);
+    double mi;
+    double[] si = new double[3];
+
+		int[] X1 = new int[] {0, 1, 2, 0, 1, 2};
+		int[] Y1 = new int[] {0, 0, 0, 1, 1, 1};
+    miCalc.initialise();
+    miCalc.addObservations(X1, Y1);
+    mi = miCalc.computeAverageLocalOfObservations();
+    assertEquals(0.0, mi, 0.000001);
+    for (int i = 0; i < 3; i++) {
+      si[i] = miCalc.computeSpecificSurprise(i);
+      assertEquals(0.0, si[i], 0.000001);
+    }
+
+
+    int[] X2 = new int[] {0, 0, 0, 1, 1, 1, 2, 2, 2};
+    int[] Y2 = new int[] {0, 0, 0, 0, 1, 2, 0, 1, 2};
+
+    miCalc.initialise();
+    miCalc.addObservations(X2, Y2);
+    mi = miCalc.computeAverageLocalOfObservations();
+
+    si = new double[3];
+    for (int i = 0; i < 3; i++) {
+      si[i] = miCalc.computeSpecificSurprise(i);
+      assertTrue(si[i] > 0);
+    }
+    assertEquals(mi, MatrixUtils.mean(si), 0.000001);
+  }
 
   public void testComputeFromPDF() throws Exception {
     double[][] pdf1 = new double[][] {{0.25, 0.25}, {0.25, 0.25}};

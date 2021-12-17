@@ -325,6 +325,56 @@ public class MutualInformationCalculatorDiscrete extends InfoMeasureCalculatorDi
     return mi;
   }
 
+  /**
+   * Calculate DeWeese-Meister specific surprise of a particular state s of
+   * the <i>source variable (var1)</i>.
+   *
+   * Note: This measure is referred to as a measure of specific information by
+   * Williams and Beer, despite DeWeese-Meister arguing against this
+   * nomenclature.
+   *
+   * <p><b>References:</b><br/>
+   * <ul>
+   *  <li>M. R. DeWeese and M. Meister, 'How to measure the information
+   *  gained from one symbol' (1999).</li>
+   *  <li>P. Williams. 'Information Dynamics: Its Theory and Application
+   *  to Embodied Cognitive Systems' (2011).</li>
+   * </ul>
+   *
+   * 
+   * @param state for which the specific surprise is to be calculated.
+   *
+   * @author Pedro A.M. Mediano (<a href="pmediano at pm.me">email</a>,
+   * <a href="http://www.doc.ic.ac.uk/~pam213">www</a>)
+   */
+  public double computeSpecificSurprise(int s) {
+
+    assert ( (s >= base1) || (s < 0) ): "State s must be between 0 and base-1";
+
+    double mi = 0.0;
+    double miCont;
+
+    // compute p_s
+    double probi = (double) iCount[s] / (double) observations;
+    for (int j = 0; j < base2; j++) {
+      // compute p_j
+      double probj = (double) jCount[j] / (double) observations;
+      // compute p(veci=i, vecj=j)
+      double jointProb = (double) jointCount[s][j] / (double) observations;
+      // Compute MI contribution:
+      if (jointProb * probi * probj > 0.0) {
+        double localValue = Math.log(jointProb / (probi * probj)) / log_2;
+        miCont = (jointProb/probi) * localValue;
+
+      } else {
+        miCont = 0.0;
+      }
+      mi += miCont;
+    }
+    
+    return mi;
+  }
+
 	@Override
 	public EmpiricalMeasurementDistribution computeSignificance(int numPermutationsToCheck) {
 		RandomGenerator rg = new RandomGenerator();
