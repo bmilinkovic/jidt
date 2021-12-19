@@ -93,6 +93,7 @@
 		<junit printsummary="yes" showoutput="yes" fork="true" forkmode="once" haltonfailure="yes" haltonerror="yes" includeantruntime="true">
 			<classpath>
 				<path refid="project.classpath"/>
+				<path refid="apache-classpath"/>
 				<pathelement path="${unittestsbin}"/>
 				<pathelement location="${basedir}/clover.jar"/>
 			</classpath>
@@ -238,6 +239,7 @@
 		<junit printsummary="yes" showoutput="yes" fork="true" forkmode="once" haltonfailure="yes" haltonerror="yes" includeantruntime="true">
 			<classpath>
 				<path refid="project.classpath"/>
+				<path refid="apache-classpath"/>
 				<pathelement path="${unittestsbin}"/>
 				<pathelement location="${basedir}/clover.jar"/>
 			</classpath>
