@@ -624,4 +624,37 @@ public class MatrixUtilsTest extends TestCase {
     checkArray(new double[] {0.06, 0.15, 0.79}, MatrixUtils.marginalisePDF(pdf, new int[] {1}, 3, 2), 0.0001);
   }
 
+  public void testVecTranspose() throws Exception {
+    double[] v1 = new double[] {4};
+    double[] v2 = new double[] {18, 166, 7579};
+
+    assertTrue(Arrays.deepEquals(new double[][] {{4}}, MatrixUtils.vecTranspose(v1)));
+    assertTrue(Arrays.deepEquals(new double[][] {{18},{166},{7579}}, MatrixUtils.vecTranspose(v2)));
+
+    assertTrue(Arrays.equals(v1, MatrixUtils.vecTranspose(MatrixUtils.vecTranspose(v1))));
+    assertTrue(Arrays.equals(v2, MatrixUtils.vecTranspose(MatrixUtils.vecTranspose(v2))));
+  }
+
+  public void testDiagonalMatrixFunctions() throws Exception {
+    double[][] A = new double[][] {{2, 0}, {0, 3}};
+    double[][] B = new double[][] {{20, 0}, {0, 30}};
+    double[][] C = new double[][] {{2, 2}, {3, 3}};
+    double[][] AB = new double[][] {{40, 0}, {0, 90}};
+    double[][] Ai = new double[][] {{0.5, 0}, {0, 0.3333333}};
+    double[][] D = new double[][] {{1, 2}, {3, 4}, {5, 6}};
+
+    assertTrue(Arrays.deepEquals(AB, MatrixUtils.matrixDiagonalProduct(A, B)));
+    assertTrue(Arrays.deepEquals(A, MatrixUtils.diag(C)));
+    checkMatrix(Ai, MatrixUtils.invertDiagonalMatrix(A), 0.0001);
+
+    boolean exception_caught = false;
+    try {
+      MatrixUtils.diag(D);
+    } catch (Throwable e) {
+      exception_caught = true;
+    }
+    assertTrue(exception_caught);
+
+  }
+
 }

@@ -682,6 +682,21 @@ public class MatrixUtils {
 	}
 
 	/**
+	 * Adds an array and a scalar together
+	 * 
+	 * @param input1
+	 * @param input2
+	 * @return
+	 */
+	public static int[] add(int[] input1, int input2) throws Exception {
+		int[] returnValues = new int[input1.length];
+		for (int i = 0; i < returnValues.length; i++) {
+			returnValues[i] = input1[i] + input2;
+		}
+		return returnValues;
+	}
+
+	/**
 	 * Adds two arrays together
 	 * 
 	 * @param input1
@@ -881,6 +896,32 @@ public class MatrixUtils {
 			throw new Exception("Column length of arrays are not equal");
 		}
 		int[][] returnValues = new int[rows][columns];
+		for (int r = 0; r < rows; r++) {
+			for (int c = 0; c < columns; c++) {
+				returnValues[r][c] = input1[r][c] - input2[r][c];
+			}
+		}
+		return returnValues;
+	}
+
+	/**
+	 * Subtract one matrix from another, double precision
+	 * 
+	 * @param input1
+	 * @param input2
+	 * @return input1 - input2
+	 * @throws Exception
+	 */
+	public static double[][] subtract(double[][] input1, double[][] input2) throws Exception {
+		int rows = input1.length;
+		int columns = input1[0].length;
+		if (input2.length != rows) {
+			throw new Exception("Row length of arrays are not equal");
+		}
+		if (input2[0].length != columns) {
+			throw new Exception("Column length of arrays are not equal");
+		}
+		double[][] returnValues = new double[rows][columns];
 		for (int r = 0; r < rows; r++) {
 			for (int c = 0; c < columns; c++) {
 				returnValues[r][c] = input1[r][c] - input2[r][c];
@@ -4653,6 +4694,28 @@ public class MatrixUtils {
 		return newMatrix;
 	}
 
+ /**
+  * Transpose a 1D "row" vector into a 2D "column" vector with one column
+  */
+  public static double[][] vecTranspose(double[] v) {
+    double[][] u = new double[v.length][1];
+    for (int i = 0; i < v.length; i++) u[i][0] = v[i];
+    return u;
+  }
+
+ /**
+  * Transpose a 2D "column" vector with one column into a 1D "row" vector
+  */
+  public static double[] vecTranspose(double[][] u) throws IllegalArgumentException {
+    if (u[0].length != 1) {
+      throw new IllegalArgumentException("Input matrix must have one column.");
+    }
+    double[] v = new double[u.length];
+    for (int i = 0; i < u.length; i++) v[i] = u[i][0];
+    return v;
+  }
+
+
 	/**
 	 * Converts an int array to a double array
 	 * 
@@ -4747,6 +4810,91 @@ public class MatrixUtils {
 		return result; 
 	}
 	
+
+  /**
+   * Extract the diagonal of a matrix
+   *
+   * @param A an nxn matrix
+   * @return X an nxn with the same diagonal as A and zero elsewhere
+   */
+  public static double[][] diag(double[][] A) throws IllegalArgumentException {
+    if (A.length != A[0].length) {
+      throw new IllegalArgumentException("Can only extract diagonal of square matrices");
+    }
+
+    int n = A.length;
+    double[][] X = new double[n][n];
+
+    for (int i = 0; i < n; i++) {
+      for (int j = 0; j < n; j++) {
+        if (i==j)
+          X[i][j] = A[i][j];
+        else
+          X[i][j] = 0.0;
+      }
+    }
+
+    return X;
+  }
+
+  /**
+   * Multiply two matrices, assuming both are diagonal.
+   *
+   * @param A an nxn diagonal matrix
+   * @param B an nxn diagonal matrix
+   * @return X the product of A and B
+   */
+  public static double[][] matrixDiagonalProduct(double[][] A, double[][] B)
+      throws IllegalArgumentException, Exception {
+    if ((A.length != A[0].length) || (B.length != B[0].length) || A.length != B.length) {
+      throw new IllegalArgumentException("Can only extract diagonal of square"
+          + " matrices, and matrices must be of the same size.");
+    }
+
+    int n  = A.length;
+    double[][] X = new double[n][n];
+
+    for (int i = 0; i < n; i++) {
+      for (int j = 0; j < n; j++) {
+        if (i==j)
+          X[i][j] = A[i][j]*B[i][j];
+        else
+          X[i][j] = 0.0;
+      }
+    }
+
+    return X;
+
+  }
+
+  /**
+   * Invert a matrix, assuming it is diagonal. In this case, it is
+   * much cheaper and reliable to invert the diagonal elements manually
+   * than using a standard matrix inversion algorithm.
+   *
+   * @param A an nxn diagonal matrix
+   * @return X the inverse of A
+   */
+  public static double[][] invertDiagonalMatrix(double[][] A) throws IllegalArgumentException, Exception {
+    if (A.length != A[0].length) {
+      throw new IllegalArgumentException("Can only extract diagonal of square matrices");
+    }
+
+    int n = A.length;
+    double[][] X = new double[n][n];
+
+    for (int i = 0; i < n; i++) {
+      for (int j = 0; j < n; j++) {
+        if (i==j)
+          X[i][j] = 1.0/A[i][j];
+        else
+          X[i][j] = 0.0;
+      }
+    }
+
+    return X;
+  }
+
 	/*
 	 * The method CholeskyDecomposition() was adapted from the 
 	 *  JAMA project -- http://math.nist.gov/javanumerics/jama/
