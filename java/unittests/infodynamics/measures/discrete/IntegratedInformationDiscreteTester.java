@@ -328,4 +328,28 @@ public class IntegratedInformationDiscreteTester extends TestCase {
 
   }
 
+  public void testNonnegative() throws Exception {
+
+    int D = 6;
+    int T = 50;
+    double tol = 0.001;
+    int[][] data = rg.generateRandomInts(T, D, 2);
+
+    IntegratedSynergyCalculatorDiscrete psiCalc = new IntegratedSynergyCalculatorDiscrete(2, D);
+    psiCalc.setProperty("PARTITION_SCAN_METHOD", "ATOMIC");
+    assertTrue(psiCalc.compute(data) > tol);
+
+    IntegratedInteractionCalculatorDiscrete phiTCalc = new IntegratedInteractionCalculatorDiscrete(2, D);
+    phiTCalc.setProperty("PARTITION_SCAN_METHOD", "ATOMIC");
+    assertTrue(phiTCalc.compute(data) > tol);
+
+    DecoderIntegrationCalculatorDiscrete phiSCalc = new DecoderIntegrationCalculatorDiscrete(2, D);
+    phiSCalc.setProperty("PARTITION_SCAN_METHOD", "ATOMIC");
+    assertTrue(phiSCalc.compute(data) > tol);
+
+    CausalDensityCalculatorDiscrete cdCalc = new CausalDensityCalculatorDiscrete(2, D);
+    cdCalc.setProperty("PARTITION_SCAN_METHOD", "ATOMIC");
+    assertTrue(cdCalc.compute(data) > tol);
+  }
+
 }
