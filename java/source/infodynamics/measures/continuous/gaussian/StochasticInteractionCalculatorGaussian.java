@@ -31,6 +31,10 @@ import java.util.List;
  * function for these observations is a multivariate Gaussian distribution.
  * </p>
  *
+ * <p>
+ * Usage is as per the paradigm outlined for {@link EffectiveMeasureCalculator}.
+ * </p>
+ *
  * <p><b>References:</b><br/>
  * <ul>
  *  <li>N. Ay, <a href="https://dx.doi.org/10.3390/e17042432">"Information
