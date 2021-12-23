@@ -448,11 +448,6 @@ public abstract class IntegratedMeasureCalculator {
 
     if (!isComputed) {
 
-      if (!isMIComputed) {
-        systemInformation = baseCalculator.computeForSystem();
-        isMIComputed = true;
-      }
-
       integratedMeasure = 0.0;
       minimumInformationPartitionScore = Double.POSITIVE_INFINITY;
 
@@ -849,9 +844,8 @@ public abstract class IntegratedMeasureCalculator {
    * computed for the latest data supplied.
    */
   public double getSystemInformation() throws Exception {
-    if (!isComputed) {
-      throw new Exception("Last computed value does not correspond to the " +
-          "latest data supplied. Run computeAverageLocalOfObservations first.");
+    if (!isMIComputed) {
+      systemInformation = baseCalculator.computeForSystem();
     }
     return systemInformation;
   }
@@ -872,8 +866,7 @@ public abstract class IntegratedMeasureCalculator {
    */
   public int getMinimumInformationPartitionSize() throws Exception {
     if (!isComputed) {
-      throw new Exception("Last computed value does not correspond to the " +
-          "latest data supplied. Run computeAverageLocalOfObservations first.");
+      computeAverageLocalOfObservations();
     }
     return minimumInformationPartitionSize;
   }
@@ -884,8 +877,7 @@ public abstract class IntegratedMeasureCalculator {
    */
   public List<List<Integer>> getMinimumInformationPartition() throws Exception {
     if (!isComputed) {
-      throw new Exception("Last computed value does not correspond to the " +
-          "latest data supplied. Run computeAverageLocalOfObservations first.");
+      computeAverageLocalOfObservations();
     }
     return minimumInformationPartition;
   }
